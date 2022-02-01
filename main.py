@@ -11,7 +11,9 @@ from pygame.locals import (
     K_RIGHT,
     K_LEFT,
     K_f,
-    K_l
+    K_l,
+    K_k,
+    K_RETURN
 )
 SCREEN_WIDTH = 1366
 SCREEN_HEIGHT = 768
@@ -24,7 +26,8 @@ screen = pygame.display.set_mode(screen_size)
 clock = pygame.time.Clock() #clock needed for the framerate
 font = pygame.font.SysFont(None, 24) #font used for displaying d value
 
-change_rate = 1
+change_rate = 1 #should d change its value base by inputs
+vel_of_change = 1 #how fast d changes its value
 R = 350 #radius of a circle
 current_color = pygame.color.Color(190, 190, 190, 255) 
 color_shift_dir = 1
@@ -47,8 +50,15 @@ while running:
                 d += 0.1
             if event.key == K_LEFT:
                 d -= 0.1             #increment d by -0.1
+            if event.key == K_k:
+                vel_of_change -= 0.1
             if event.key == K_l:
-                d = int(input("Insert a desired d value: "))
+                vel_of_change += 0.1
+            if event.key == K_RETURN:
+                try:
+                    d = int(input("Insert a desired d value: "))
+                except:
+                    print("The d value should be an integer or a floating point number")
                 change_rate = 0
             if event.key == K_f:
                 d = math.floor(d) #Floor the d to the closest integer
@@ -59,7 +69,7 @@ while running:
             running = False
     
     if change_rate == 1:
-        d += 0.005
+        d += 0.005*vel_of_change
 
     current_color, color_shift_dir = rainbow_animation(current_color, color_shift_dir)
    
