@@ -27,15 +27,9 @@ def get_reflected_point(r, point, d, screen_size):
     return point_r #Return reflected point
 
 
-#RGB hue shift; WIP
-def rainbow_animation(color, mode):
-    vel = 2 #how fast the shift goes
-    if color[0] > 200: #some clamps and when to change direction of a shift
-        mode = -1
-    if color[0] < 50:
-        mode = 1
-    #Shifts all components of a color equally - shifts through the shades of gray
-    color[0] += vel*mode #shift red
-    color[1] += vel*mode #shift blue
-    color[2] += vel*mode #shift green
-    return color, mode
+# RGB hue shift
+def color_shift(color, direction, index):
+    min_v = 30
+    max_v = 255
+    color[index] = max(min(color[index] + direction, max_v), min_v)
+    return color
