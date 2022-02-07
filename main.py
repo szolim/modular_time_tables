@@ -1,5 +1,6 @@
-import pygame, sys, math
+import pygame, sys
 from funcs import *
+from random import randint
 from pygame.locals import (
     KEYDOWN,
     K_SPACE,
@@ -15,8 +16,8 @@ from pygame.locals import (
     K_k,
     K_RETURN
 )
-SCREEN_WIDTH = 1366
-SCREEN_HEIGHT = 768
+SCREEN_WIDTH = 800
+SCREEN_HEIGHT = 800
 d = 2 # the ratio of reflected arc and original arc for a point
 circle_res = 200 #how many points = resolution of cardioid and derived shapes
 #initalizing pygame and setting up the window
@@ -29,12 +30,18 @@ font = pygame.font.SysFont(None, 24) #font used for displaying d value
 change_rate = 1 #should d change its value base by inputs
 vel_of_change = 1 #how fast d changes its value
 R = 350 #radius of a circle
-current_color = pygame.color.Color(190, 190, 190, 255) 
-color_shift_dir = 1
+
+
+current_color = pygame.Color((128, 128, 128))
+color_dir = 1   # color decreasing or increasing
+color_index = 0     # index of Color array
+stopper = 0     # counts milisecs
+
 #Game loop
 running = True
 while running:
     clock.tick(60) #set fps to 30
+    stopper += clock.get_time()
     #Event loop /check for input and other activities
     for event in pygame.event.get():
         if event.type == KEYDOWN:
@@ -71,7 +78,14 @@ while running:
     if change_rate == 1:
         d += 0.005*vel_of_change
 
-    current_color, color_shift_dir = rainbow_animation(current_color, color_shift_dir)
+        # stopper counts 1 sec then updates values
+        if stopper > 1000:
+            color_dir = randint(-1, 1)
+            color_index = randint(0, 2)
+            stopper = 0
+
+        # updates color
+        current_color = color_shift(current_color, color_dir, color_index)
    
     #draw a background circle and clear previous frame
     screen.fill((0, 0, 0))
